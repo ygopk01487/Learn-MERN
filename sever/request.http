@@ -1,0 +1,52 @@
+POST  http://localhost:5000/api/auth/register
+Content-Type: application/json
+
+{
+    "username": "yasuo2",
+    "password": "yasuo"
+}
+
+###
+GET http://localhost:5000/api/auth
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzFhYTA0MWM1YWVkYzM3NGExY2I3NzgiLCJpYXQiOjE2NjI5ODIwODd9.tIj9TgdgBaM8XRj3FfjFBT6aPAsvL3IkRngyN0blML0
+
+###
+POST  http://localhost:5000/api/auth/login
+content-type: application/json
+
+
+{
+    "username": "yasuo2",
+    "password": "yasuo"
+}
+
+###
+POST  http://localhost:5000/api/posts
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzFhYTA1NWM1YWVkYzM3NGExY2I3N2IiLCJpYXQiOjE2NjI5Njg0NTV9.DzGj1jT23QZuzXIOD0ffxu3oQG1aFVoGACVmUrMDHoQ
+
+{
+    "title": "react3",
+    "description": "react3",
+    "url": "youtube.com"
+}
+
+###
+GET  http://localhost:5000/api/posts
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzFhYTA0MWM1YWVkYzM3NGExY2I3NzgiLCJpYXQiOjE2NjI5ODIwODd9.tIj9TgdgBaM8XRj3FfjFBT6aPAsvL3IkRngyN0blML0
+
+###
+PUT  http://localhost:5000/api/posts/631ee07aa329e6410cfbe624
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzFhYTA0MWM1YWVkYzM3NGExY2I3NzgiLCJpYXQiOjE2NjI5ODIwODd9.tIj9TgdgBaM8XRj3FfjFBT6aPAsvL3IkRngyN0blML0
+
+{
+    "title": "vue",
+    "description": "VUEEEEE",
+    "url": "vue.com"
+
+}
+
+###
+DELETE   http://localhost:5000/api/posts/631edcdc4ba1b8aee1619bb9
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzFhYTA0MWM1YWVkYzM3NGExY2I3NzgiLCJpYXQiOjE2NjI5ODIwODd9.tIj9TgdgBaM8XRj3FfjFBT6aPAsvL3IkRngyN0blML0
