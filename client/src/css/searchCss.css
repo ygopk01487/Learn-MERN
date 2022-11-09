@@ -1,0 +1,13 @@
+.divSearch {
+    display: none;
+}
+.divSearch ul li {
+    list-style: none
+}
+.divSearch ul {
+    padding-left: 20px;
+}
+.divSearch.active {
+    display: block;
+
+}

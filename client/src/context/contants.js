@@ -11,3 +11,7 @@ export const ADD_POST = "ADD_POST";
 export const EDIT_POST = "EDIT_POST";
 export const DELETE_POST = "DELETE_POST";
 export const FIND_POST_BY_ID = "FIND_POST_BY_ID";
+
+export const POSTS_LOADED_SUCCESS_ALL = "POSTS_LOADED_SUCCESS_ALL";
+export const POSTS_LOADED_FAIL_ALL = "POSTS_LOADED_FAIL_ALL";
+

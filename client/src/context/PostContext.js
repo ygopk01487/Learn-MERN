@@ -1,4 +1,4 @@
-import { createContext, useReducer, useState } from "react";
+import { createContext, useEffect, useReducer, useState } from "react";
 import { postReducer } from "../Reducer/PostReducer";
 import {
   ADD_POST,
@@ -7,7 +7,9 @@ import {
   EDIT_POST,
   FIND_POST_BY_ID,
   POSTS_LOADED_FAIL,
+  POSTS_LOADED_FAIL_ALL,
   POSTS_LOADED_SUCCESS,
+  POSTS_LOADED_SUCCESS_ALL,
 } from "./contants";
 import axios from "axios";
 
@@ -18,12 +20,16 @@ const PostContextProvider = ({ children }) => {
   const [postState, dispatch] = useReducer(postReducer, {
     post: null,
     posts: [],
+    postsAll: [],
     postsLoading: true,
   });
 
   //* show modal
   const [showAddPostModal, setShowAddPostModal] = useState(false);
   const [showEditPostModal, setShowEditPostModal] = useState(false);
+
+  //* set state numerage
+  const [totalPages, setTotalPages] = useState(1);
 
   const [showToast, setShowToast] = useState({
     show: false,
@@ -37,12 +43,12 @@ const PostContextProvider = ({ children }) => {
       const response = await axios.get(`${apiUrl}/posts`);
       if (response.data.success) {
         dispatch({
-          type: POSTS_LOADED_SUCCESS,
+          type: POSTS_LOADED_SUCCESS_ALL,
           payload: response.data.posts,
         });
       }
     } catch (error) {
-      dispatch({ type: POSTS_LOADED_FAIL });
+      dispatch({ type: POSTS_LOADED_FAIL_ALL });
     }
   };
 
@@ -52,8 +58,9 @@ const PostContextProvider = ({ children }) => {
       const resopnse = await axios.post(`${apiUrl}/posts`, newPost);
       if (resopnse.data.success) {
         dispatch({ type: ADD_POST, payload: resopnse.data.post });
+        window.location.reload()
         return resopnse.data;
-      }
+      } 
     } catch (error) {
       return error.resopnse.data
         ? error.resopnse.data
@@ -66,6 +73,7 @@ const PostContextProvider = ({ children }) => {
     const post = postState.posts.find((post) => post._id === postId);
     dispatch({ type: FIND_POST_BY_ID, payload: post });
   };
+
   //Update post
   const updatePosts = async (updatePost) => {
     try {
@@ -75,6 +83,7 @@ const PostContextProvider = ({ children }) => {
       );
       if (response.data.success) {
         dispatch({ type: EDIT_POST, payload: response.data.post });
+        await getPosts();
         return response.data;
       }
     } catch (error) {
@@ -90,11 +99,35 @@ const PostContextProvider = ({ children }) => {
       const response = await axios.delete(`${apiUrl}/posts/${postId}`);
       if (response.data.success) {
         dispatch({ type: DELETE_POST, payload: postId });
+        await paginationPost()
       }
     } catch (error) {
-      console.log(error);
+      return error.resopnse.data
+        ? error.resopnse.data
+        : { success: false, message: "Sever errorr" };
     }
   };
+
+  //* pagination
+  const paginationPost = async (pageNumber, titleName) => {
+    try {
+      const response = await axios.get(
+        `${apiUrl}/posts//post?page=${pageNumber}&title=${titleName}`
+      );
+      if (response.data.success) {
+        setTotalPages(response.data.totalPage);
+        dispatch({ type: POSTS_LOADED_SUCCESS, payload: response.data.posts });
+        return response.data;
+      }
+    } catch (error) {
+      dispatch({ type: POSTS_LOADED_FAIL });
+    }
+  };
+
+  // useEffect(() => {
+  //   paginationPost();
+  //   getPosts();
+  // }, []);
 
   //* Post context data
   const postContextData = {
@@ -109,7 +142,10 @@ const PostContextProvider = ({ children }) => {
     updatePosts,
     findPost,
     showEditPostModal,
-    setShowEditPostModal
+    setShowEditPostModal,
+    setTotalPages,
+    totalPages,
+    paginationPost,
   };
 
   return (

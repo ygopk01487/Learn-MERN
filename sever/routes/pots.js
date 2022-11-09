@@ -3,7 +3,14 @@ const router = express.Router();
 
 const verifyToken = require("../miđleware/auth");
 const { findOneAndUpdate } = require("../model/post");
-const { deletePost, postPost, getAllPost, putPosts } = require("../context/postContext");
+const {
+  deletePost,
+  postPost,
+  getAllPost,
+  putPosts,
+  paginationPost,
+  searchPost,
+} = require("../context/postContext");
 
 //@router get api/post
 //@ desc get post
@@ -24,5 +31,11 @@ router.put("/:id", verifyToken, putPosts);
 //@ desc DELETE post
 //@access Private
 router.delete("/:id", verifyToken, deletePost);
+
+//paginnation
+router.get("/post", verifyToken, paginationPost);
+
+// //search
+// router.get('/search', verifyToken, searchPost)
 
 module.exports = router;

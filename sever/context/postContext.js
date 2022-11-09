@@ -102,4 +102,91 @@ const deletePost = async (req, res) => {
   }
 };
 
-module.exports = { getAllPost, postPost, putPosts, deletePost };
+//pagination
+const paginationPost = async (req, res) => {
+  const pageSize = 2;
+  let page = parseInt(req.query.page) || 1;
+  const { title } = req.query || "";
+
+  try {
+    const total = await Post.countDocuments({
+      user: req.userId,
+      title: { $regex: title, $options: "i" },
+    });
+
+    const posts = await Post.find({
+      user: req.userId,
+      title: { $regex: title, $options: "i" },
+    })
+      .populate("user", ["username"])
+      .limit(pageSize)
+      .skip(pageSize * (page - 1));
+
+    res.json({
+      success: true,
+      page,
+      totalPage: Math.ceil(total / pageSize),
+      posts,
+    });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
+//search
+// const searchPost = async (req, res) => {
+//   const pageSize = 2;
+//   const page = parseInt(req.query.page) || 1;
+//   const { title } = req.query;
+//   console.log("tên title: " + title);
+//   try {
+//     const total = await Post.countDocuments({
+//       user: req.userId,
+//       title: { $regex: title, $options: "i" },
+//     });
+//     console.log("Tổng: " + total);
+//     const posts = await Post.find({
+//       user: req.userId,
+//       title: { $regex: title, $options: "i" },
+//     })
+//       .populate("user", ["username"])
+//       .limit(pageSize)
+//       .skip(pageSize * (page - 1));
+//     console.log("Danh sách: " + posts);
+//     res.json({
+//       success: true,
+//       page,
+//       totalPage: Math.ceil(total / pageSize),
+//       posts,
+//     });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ success: false, message: "Internal server error" });
+//   }
+// };
+
+// const searchPost = async (req, res) => {
+//   // const { title } = req.body;
+//   const { title } = req.query;
+//   console.log(title);
+//   try {
+//     const posts = await Post.find({
+//       user: req.userId,
+//       title: { $regex: title, $options: 'i' },
+//     }).populate("user", ["username"]);
+//     console.log("danh sách: " + posts);
+//     res.json({ success: true, posts });
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).json({ success: false, message: "Internal server error" });
+//   }
+// };
+
+module.exports = {
+  getAllPost,
+  postPost,
+  putPosts,
+  deletePost,
+  paginationPost,
+};

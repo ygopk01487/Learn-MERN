@@ -23,16 +23,16 @@ function App() {
             <Route
               exact
               path="/login"
-              element={<Auth authRouter="/login" />}
+              element={<Auth authRouter="/login" setActive='true' />}
             ></Route>
             <Route
               exact
               path="/register"
               element={<Auth authRouter="/register" />}
             ></Route>
-            <Route exact path="/home" element={<LayoutDashboard />}>
+            <Route exact path="/dashboard" element={<LayoutDashboard />}>
               <Route
-                path="dashboard"
+                index
                 element={
                   <ProtectedRoute>
                     <Dashboard />

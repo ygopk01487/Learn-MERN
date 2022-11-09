@@ -50,3 +50,14 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzFhY
 ###
 DELETE   http://localhost:5000/api/posts/631edcdc4ba1b8aee1619bb9
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzFhYTA0MWM1YWVkYzM3NGExY2I3NzgiLCJpYXQiOjE2NjI5ODIwODd9.tIj9TgdgBaM8XRj3FfjFBT6aPAsvL3IkRngyN0blML0
+
+
+###
+GET http://localhost:5000/api/posts/post?page=1&title=3
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzFhYTA0MWM1YWVkYzM3NGExY2I3NzgiLCJpYXQiOjE2NjI5ODIwODd9.tIj9TgdgBaM8XRj3FfjFBT6aPAsvL3IkRngyN0blML0
+
+###
+GET http://localhost:5000/api/posts/search?page=1&title=nodejs
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2MzFhYTA0MWM1YWVkYzM3NGExY2I3NzgiLCJpYXQiOjE2NjI5ODIwODd9.tIj9TgdgBaM8XRj3FfjFBT6aPAsvL3IkRngyN0blML0
+

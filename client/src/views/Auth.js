@@ -6,9 +6,7 @@ import { useContext } from "react";
 import { Navigate } from "react-router-dom";
 import Spinner from "react-bootstrap/Spinner";
 
-
-
-const Auth = ({ authRouter }) => {
+const Auth = ({ authRouter, setActive }) => {
   const {
     authState: { authLoading, isAuthenticated },
   } = useContext(AuthContext);
@@ -20,7 +18,7 @@ const Auth = ({ authRouter }) => {
       </div>
     );
   } else if (isAuthenticated) {
-    return <Navigate to="/home/dashboard" /> ;
+    return <Navigate to="/dashboard" />;
   } else {
     body = (
       <>

@@ -34,7 +34,7 @@ const NavbarMenu = () => {
           <Nav className="mr-auto">
             <Nav.Link
               className="font-weigth-bolder text-white"
-              to="dashboard"
+              to="/dashboard"
               as={Link}
             >
               Dashboard

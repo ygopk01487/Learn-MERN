@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { PostContext } from "../context/PostContext";
 import { useContext } from "react";
 import { AuthContext } from "../context/Authcontext";
@@ -8,11 +8,20 @@ import AddPostModal from "../component/posts/AddPostModal";
 import addIcon from "../assets/plus-circle-fill.svg";
 import OverlayTrigger from "react-bootstrap/OverlayTrigger";
 import Tooltip from "react-bootstrap/Tooltip";
-import Row from "react-bootstrap/Row";
 import Toast from "react-bootstrap/Toast";
 import UpdatePostModal from "../component/posts/UpdatePostModal";
+import Pagination from "react-bootstrap/Pagination";
+import Form from "react-bootstrap/Form";
+import Button from "react-bootstrap/Button";
+import { filterDivSearch } from "../JavaScript/searchJS";
+import SearchForm from "./SearchForm";
+import searchCss from "../css/searchCss.css";
 
 const Dashboard = () => {
+  //search state
+  const [searchText, setSearchText] = useState({ nameSearch: "" });
+  const [nameTitle, setNameTitle] = useState("");
+
   //* contexts
   const {
     authState: {
@@ -20,17 +29,80 @@ const Dashboard = () => {
     },
   } = useContext(AuthContext);
   const {
-    postState: { post, posts, postsLoading },
+    postState: { postsAll, post, posts, postsLoading },
     getPosts,
     setShowAddPostModal,
     showToast: { show, message, type },
     setShowToast,
+    paginationPost,
+    totalPages,
   } = useContext(PostContext);
 
+  //* set state numerage
+  const [numberPage, setNumberPage] = useState(1);
+
+
+  //page arr
+  const pages = [];
+
+  for (let i = 1; i <= totalPages; i++) {
+    pages.push(i);
+  }
+
+
   //* start get all post
+  // useEffect(() => {
+  //   getPosts();
+  // }, []);
+
   useEffect(() => {
     getPosts();
   }, []);
+
+  //* start pagination
+  useEffect(() => {
+    paginationPost(numberPage, nameTitle);
+    checkFilterSearch(nameTitle);
+  }, [numberPage, nameTitle]);
+
+  //* next pagination
+  const nextPagin = () => {
+    setNumberPage(Math.min(totalPages, numberPage + 1));
+  };
+
+  //* last pagination
+  const lasttPagin = () => {
+    setNumberPage(Math.max(0, numberPage - 1));
+  };
+
+  //
+  const pagesNumber = (e) => {
+    const numbers = parseInt(e.target.id);
+    setNumberPage(numbers);
+  };
+
+  //search
+  const onChangSearch = (e) => {
+    setSearchText({ ...searchText, [e.target.name]: e.target.value });
+  };
+
+  const searchFilter = postsAll.filter((item) =>
+    item.title.toLowerCase().includes(searchText.nameSearch.toLocaleLowerCase())
+  );
+
+  const checkFilterSearch = (nameTitle) => {
+    const divSearch = document.querySelector(".divSearch");
+    if (nameTitle.length !== 0) {
+      divSearch.classList.remove("active");
+    }
+  };
+
+
+  const searchData = (e) => {
+    e.preventDefault()
+    setNameTitle(searchText.nameSearch);
+    setNumberPage(1);
+  };
 
   let body = null;
   if (postsLoading) {
@@ -94,6 +166,32 @@ const Dashboard = () => {
   }
   return (
     <>
+      <div
+        className="search-container"
+        style={{ marginTop: "10px", marginLeft: "40%" }}
+      >
+        <Form className="d-flex" style={{ width: "30%" }} onSubmit={searchData}>
+          <Form.Control
+            type="search"
+            placeholder="Search"
+            className="me-2 nameSearch"
+            aria-label="Search"
+            name="nameSearch"
+            onChange={onChangSearch}
+            onInput={filterDivSearch}
+            value={searchText.nameSearch}
+          />
+          <Button
+            variant="outline-success"
+            className="btn-search"
+            onClick={searchData}
+          >
+            Search
+          </Button>
+        </Form>
+      </div>
+      {/* search */}
+      <SearchForm searchFilter={searchFilter} nameTitle={nameTitle} />
       {body}
       <AddPostModal />
       {post !== null && <UpdatePostModal />}
@@ -114,6 +212,38 @@ const Dashboard = () => {
           <strong>{message}</strong>
         </Toast.Body>
       </Toast>
+      {/* pagination */}
+      {pages.length !== 0 ? (
+        <div
+          className="pagination-pages"
+          style={{ marginTop: "50px", marginLeft: "43%" }}
+        >
+          <Pagination>
+            <Pagination.Prev
+              onClick={lasttPagin}
+              disabled={numberPage === 1 ? true : false}
+            />
+            {pages.map((number, i) => {
+              return (
+                <Pagination.Item
+                  key={i}
+                  id={number}
+                  onClick={pagesNumber}
+                  active={numberPage === number ? true : false}
+                >
+                  {number}
+                </Pagination.Item>
+              );
+            })}
+            <Pagination.Next
+              onClick={nextPagin}
+              disabled={numberPage === pages.length ? true : false}
+            />
+          </Pagination>
+        </div>
+      ) : (
+        ""
+      )}
     </>
   );
 };

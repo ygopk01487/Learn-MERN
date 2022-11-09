@@ -5,6 +5,7 @@ import {
   FIND_POST_BY_ID,
   POSTS_LOADED_FAIL,
   POSTS_LOADED_SUCCESS,
+  POSTS_LOADED_SUCCESS_ALL,
 } from "../context/contants";
 
 export const postReducer = (state, action) => {
@@ -14,6 +15,12 @@ export const postReducer = (state, action) => {
       return {
         ...state,
         posts: payload,
+        postsLoading: false,
+      };
+    case POSTS_LOADED_SUCCESS_ALL:
+      return {
+        ...state,
+        postsAll: payload,
         postsLoading: false,
       };
     case POSTS_LOADED_FAIL:
